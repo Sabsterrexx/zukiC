@@ -1,8 +1,9 @@
-#include "../cJSON/cJSON.h"
 #include <curl/curl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "../cJSON/cJSON.h"
 
 #define API_KEY "zu-01b094de5f7f9993b6cb6529a64f071a"
 
@@ -63,6 +64,47 @@ cJSON *get_chat_data(const char *userName, const char *userMessage,
   return data;
 }
 
+char *extract_content_from_response(const char *response) {
+  cJSON *json = cJSON_Parse(response);
+  if (!json) {
+    fprintf(stderr, "Error parsing JSON response\n");
+    return NULL;
+  }
+
+  cJSON *choices = cJSON_GetObjectItem(json, "choices");
+  if (!choices || !cJSON_IsArray(choices)) {
+    cJSON_Delete(json);
+    fprintf(stderr, "Invalid JSON format\n");
+    return NULL;
+  }
+
+  cJSON *first_choice = cJSON_GetArrayItem(choices, 0);
+  if (!first_choice) {
+    cJSON_Delete(json);
+    fprintf(stderr, "No choices found\n");
+    return NULL;
+  }
+
+  cJSON *message = cJSON_GetObjectItem(first_choice, "message");
+  if (!message) {
+    cJSON_Delete(json);
+    fprintf(stderr, "No message found\n");
+    return NULL;
+  }
+
+  cJSON *content = cJSON_GetObjectItem(message, "content");
+  if (!content || !cJSON_IsString(content)) {
+    cJSON_Delete(json);
+    fprintf(stderr, "No content found\n");
+    return NULL;
+  }
+
+  char *content_str = strdup(content->valuestring);
+  cJSON_Delete(json);
+
+  return content_str;
+}
+
 char *chat_call(const char *userName, const char *userMessage,
                 const char *requestedModel, const char *systemPrompt,
                 double currTemp, const char *endpoint) {
@@ -106,5 +148,8 @@ char *chat_call(const char *userName, const char *userMessage,
   }
   curl_global_cleanup();
 
-  return response.ptr;
+  char *content = extract_content_from_response(response.ptr);
+  free(response.ptr);
+
+  return content;
 }
