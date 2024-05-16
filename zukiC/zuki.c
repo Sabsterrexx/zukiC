@@ -5,8 +5,6 @@
 
 #include "../cJSON/cJSON.h"
 
-#define API_KEY "zu-01b094de5f7f9993b6cb6529a64f071a"
-
 struct string {
   char *ptr;
   size_t len;
@@ -107,7 +105,7 @@ char *extract_content_from_response(const char *response) {
 
 char *chat_call(const char *userName, const char *userMessage,
                 const char *requestedModel, const char *systemPrompt,
-                double currTemp, const char *endpoint) {
+                double currTemp, const char *endpoint, const char* API_KEY) {
   CURL *curl;
   CURLcode res;
   struct string response;
