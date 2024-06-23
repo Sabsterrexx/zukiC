@@ -6,4 +6,5 @@ The official C API wrapper for the zukijourney API. Currently, it only works on 
 
 2.) In your terminal run the following commands:
 ``make``
+
 ``./zuki``
