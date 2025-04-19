@@ -11,7 +11,7 @@ main.o: main.c cJSON/cJSON.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 zukiC.o: zukiC/zuki.c cJSON/cJSON.h
-	$(CC) $(CFLAGS) -c $< -o $@ -lcurl
+	$(CC) $(CFLAGS) -c $< -o $@ 
 
 cJSON.o: cJSON/cJSON.c cJSON/cJSON.h
 	$(CC) $(CFLAGS) -c $< -o $@
