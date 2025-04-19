@@ -14,7 +14,7 @@ int main() {
   const char *requestedModel = "gpt-3.5-turbo";
   const char *systemPrompt = "You are a helpful assistant.";
   double currTemp = 0.7;
-  const char *endpoint = "https://zukijourney.xyzbot.net/v1/chat/completions";
+  const char *endpoint = "https://api.zukijourney.com/v1/chat/completions";
 
   char *response_content = chat_call(userName, userMessage, requestedModel,
                                      systemPrompt, currTemp, endpoint, API_KEY);
